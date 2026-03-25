@@ -1,6 +1,12 @@
 @import "./variables.css";
 @import "tailwindcss";
 
+@theme {
+    --breakpoint-mobile: 480px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 992px;
+}
+
 * {
     box-sizing: border-box;
 }
