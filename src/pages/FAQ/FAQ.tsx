@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FAQItem } from "../../components";
+import { BackButton, FAQItem } from "../../components";
 import { faqItems } from "./faqData";
 import heroBg from "../../assets/faq-bg.png";
 
@@ -29,6 +29,7 @@ function FAQ() {
       </section>
 
       <main className="w-[90%] mx-auto">
+        <BackButton />
         <section className="bg-[#f9f9f9] py-[50px] px-5 my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)] tablet:px-8 desktop:px-10 desktop:py-[60px]">
           <h2 className="text-[2rem] text-center mb-5 text-[rgb(226,122,31)] mobile:text-[1.6rem] tablet:text-[1.8rem]">
             Dúvidas Frequentes

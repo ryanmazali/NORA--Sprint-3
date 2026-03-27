@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { MapPin, Phone, Mail} from "lucide-react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import heroBg from "../../assets/contato.png";
+import { BackButton } from "../../components";
 
 interface ContatoFormData {
   nome: string;
@@ -49,6 +50,7 @@ function Contato() {
       </section>
 
       <main className="w-[90%] mx-auto max-w-[1300px]">
+        <BackButton />
         <section className="bg-[#f9f9f9] p-8 my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)] text-center">
           <h2 className="text-[2rem] font-bold text-[#222] mb-5">Contato</h2>
 
@@ -56,56 +58,34 @@ function Contato() {
             Quer saber mais sobre a Turma do Bem? Aqui estão os canais de contato oficiais:
           </p>
 
-          <div className="grid grid-cols-3 gap-8 justify-items-center desktop:grid-cols-3 tablet:grid-cols-1 mobile:grid-cols-1">
+          {/* Linha 1 — 3 itens */}
+          <div className="flex flex-wrap justify-center gap-8 mt-4">
             {[
-              {
-                icon: <MapPin size={28} />,
-                titulo: "Endereço",
-                texto: "Rua Maurício Francisco Klabin, 449 – Vila Mariana, São Paulo – SP"
-              },
-              {
-                icon: <Phone size={28} />,
-                titulo: "Telefone",
-                texto: "+55 11 5084-7276"
-              },
-              {
-                icon: <Mail size={28} />,
-                titulo: "Presidente",
-                texto: "turmadobem@tdb.org.br",
-                href: "mailto:turmadobem@tdb.org.br"
-              },
-              {
-                icon: <Mail size={28} />,
-                titulo: "Comunicação",
-                texto: "comunicacao@tdb.org.br",
-                href: "mailto:comunicacao@tdb.org.br"
-              },
-              {
-                icon: <Mail size={28} />,
-                titulo: "Dúvidas, críticas ou sugestões",
-                texto: "faleconosco@tdb.org.br",
-                href: "mailto:faleconosco@tdb.org.br"
-              }
+              { icon: <MapPin size={28} />, titulo: "Endereço", texto: "Rua Maurício Francisco Klabin, 449 – Vila Mariana, São Paulo – SP" },
+              { icon: <Phone size={28} />, titulo: "Telefone", texto: "+55 11 5084-7276" },
+              { icon: <Mail size={28} />, titulo: "Presidente", texto: "turmadobem@tdb.org.br", href: "mailto:turmadobem@tdb.org.br" },
             ].map((item) => (
-              <div key={item.titulo}>
-                <div className="flex justify-center mb-2 text-[#0a3d62]">
-                  {item.icon}
-                </div>
+              <div key={item.titulo} className="flex flex-col items-center w-[200px]">
+                <div className="mb-2 text-[#0a3d62]">{item.icon}</div>
+                <h3 className="text-[1.1rem] font-semibold text-[#222] mb-2">{item.titulo}</h3>
+                {item.href
+                  ? <a href={item.href} className="text-[#222] no-underline transition-colors duration-300 hover:text-[rgb(226,122,31)] hover:underline text-center">{item.texto}</a>
+                  : <p className="text-[#333] text-center">{item.texto}</p>
+                }
+              </div>
+            ))}
+          </div>
 
-                <h3 className="text-[1.1rem] font-semibold text-[#222] mb-2">
-                  {item.titulo}
-                </h3>
-
-                {item.href ? (
-                  <a
-                    href={item.href}
-                    className="text-[#222] no-underline transition-colors duration-300 hover:text-[rgb(226,122,31)] hover:underline"
-                  >
-                    {item.texto}
-                  </a>
-                ) : (
-                  <p className="text-[#333]">{item.texto}</p>
-                )}
+          {/* Linha 2 — 2 itens centralizados */}
+          <div className="flex flex-wrap justify-center gap-8 mt-8">
+            {[
+              { icon: <Mail size={28} />, titulo: "Comunicação", texto: "comunicacao@tdb.org.br", href: "mailto:comunicacao@tdb.org.br" },
+              { icon: <Mail size={28} />, titulo: "Dúvidas, críticas ou sugestões", texto: "faleconosco@tdb.org.br", href: "mailto:faleconosco@tdb.org.br" },
+            ].map((item) => (
+              <div key={item.titulo} className="flex flex-col items-center w-[200px]">
+                <div className="mb-2 text-[#0a3d62]">{item.icon}</div>
+                <h3 className="text-[1.1rem] font-semibold text-[#222] mb-2">{item.titulo}</h3>
+                <a href={item.href} className="text-[#222] no-underline transition-colors duration-300 hover:text-[rgb(226,122,31)] hover:underline text-center">{item.texto}</a>
               </div>
             ))}
           </div>

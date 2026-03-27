@@ -3,6 +3,7 @@ import heroBg from "../../assets/melhordentista-bg.png";
 import img1 from "../../assets/melhor-dentista-1.jpg";
 import img2 from "../../assets/melhor-dentista-2.jpg";
 import img3 from "../../assets/melhor-dentista-3.jpg";
+import { BackButton } from "../../components";
 
 function MelhorDentista() {
     useEffect(() => {
@@ -22,6 +23,7 @@ function MelhorDentista() {
                 </div>
             </section>
             <main className="w-[90%] mx-auto max-w-[1300px]">
+                <BackButton />
                 <section className="bg-white p-[30px] my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
                     <p className="text-[1rem] text-[#333] mb-4 leading-relaxed">
                         Durante o evento anual <strong>Sorriso do Bem</strong>, os dentistas e coordenadores voluntários

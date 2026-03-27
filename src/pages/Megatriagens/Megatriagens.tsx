@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import heroBg from "../../assets/dentistas-voluntarios.jpg";
 import imgBanner from "../../assets/dentistas-voluntarios.jpg";
+import { BackButton } from "../../components";
 
 function Megatriagens() {
     useEffect(() => {
@@ -20,6 +21,7 @@ function Megatriagens() {
                 </div>
             </section>
             <main className="w-[90%] mx-auto max-w-[1300px]">
+                <BackButton />
                 <section className="bg-white p-[30px] my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
                     <p className="text-[1rem] text-[#333] mb-4 leading-relaxed">
                         As Megatriagens são eventos em grande escala promovidos pela Turma do Bem, onde milhares de jovens

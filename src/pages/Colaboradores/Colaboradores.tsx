@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { TeamCard } from "../../components";
 import { colaboradores } from "./colaboradoresData";
+import { BackButton } from "../../components";
 import heroBg from "../../assets/desenvolvedores.jpg";
 function Colaboradores() {
     useEffect(() => {
@@ -29,27 +30,28 @@ function Colaboradores() {
         </div>{" "}
         </section>{" "}
         <main className="w-[90%] mx-auto">
-        {" "}
-        <section className="grid grid-cols-3 gap-[30px] my-10 max-w-[1100px] mx-auto desktop:grid-cols-3 tablet:grid-cols-1 mobile:grid-cols-1">
+            <BackButton />
             {" "}
-            {colaboradores.map((colaborador) => (
-            <div
-                key={colaborador.id}
-                onClick={() => navigate(`/colaboradores/${colaborador.id}`)}
-                className="cursor-pointer"
-            >
+            <section className="grid grid-cols-1 gap-[30px] my-10 max-w-[1100px] mx-auto tablet:grid-cols-3">
                 {" "}
-                <TeamCard
-                nome={colaborador.nome}
-                rm={colaborador.rm}
-                turma={colaborador.turma}
-                foto={colaborador.foto}
-                github={colaborador.github}
-                linkedin={colaborador.linkedin}
-                />{" "}
-            </div>
-            ))}{" "}
-        </section>{" "}
+                {colaboradores.map((colaborador) => (
+                <div
+                    key={colaborador.id}
+                    onClick={() => navigate(`/colaboradores/${colaborador.id}`)}
+                    className="cursor-pointer"
+                >
+                    {" "}
+                    <TeamCard
+                    nome={colaborador.nome}
+                    rm={colaborador.rm}
+                    turma={colaborador.turma}
+                    foto={colaborador.foto}
+                    github={colaborador.github}
+                    linkedin={colaborador.linkedin}
+                    />{" "}
+                </div>
+                ))}{" "}
+            </section>{" "}
         </main>{" "}
     </>
     );

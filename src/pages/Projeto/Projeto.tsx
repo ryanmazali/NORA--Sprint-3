@@ -16,6 +16,7 @@ import imgEmail from "../../assets/email.svg";
 import imgFacebook from "../../assets/facebook.svg";
 import imgWhatsapp from "../../assets/whatsapp.svg";
 import imgAI from "../../assets/ai.svg";
+import { BackButton } from "../../components";
 
 const roadmapItems = [
     { img: imgBancoDados, texto: "Criação do banco de dados relacional e PWA para cadastro inicial." },
@@ -55,6 +56,7 @@ function Projeto() {
                 </div>
             </section>
             <main className="w-[90%] mx-auto max-w-[1300px]">
+                <BackButton />
                 <section className="bg-white p-[30px] my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
                     <h2 className="text-[1.5rem] font-bold text-[#0a3d62] border-l-[6px] border-[#b0d6f5] pl-3 mb-4">O problema que buscamos resolver</h2>
                     <p className="text-[1rem] text-[#333] mb-4">Apesar do impacto social da ONG Turma do Bem, sua operação ainda enfrenta grandes desafios:</p>
@@ -89,8 +91,14 @@ function Projeto() {
                     </ul>
                 </section>
                 <section className="bg-white p-[30px] my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-                    <h2 className="text-[1.5rem] font-bold text-[#0a3d62] border-l-[6px] border-[#b0d6f5] pl-3 mb-4">Roadmap da solução</h2>
-                    <div className="grid grid-cols-5 gap-5 mt-5 desktop:grid-cols-5 tablet:grid-cols-1 mobile:grid-cols-1">
+                    <h2 
+                        className="
+                            text-[1.5rem] font-bold text-[#0a3d62] border-l-[6px] border-[#b0d6f5] pl-3 mb-4
+                        "
+                    >
+                        Roadmap da solução
+                    </h2>
+                    <div className="grid grid-cols-1 gap-5 mt-5 tablet:grid-cols-3 desktop:grid-cols-5">
                         {roadmapItems.map((item) => (
                             <div key={item.texto} className="bg-white p-5 text-center shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-[5px] hover:bg-[aliceblue]">
                                 <img src={item.img} alt="" className="w-[80px] h-[80px] mx-auto mb-3" />

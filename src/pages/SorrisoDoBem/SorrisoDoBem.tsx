@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import heroBg from "../../assets/sorrisodobem-bg.png";
 import imgSorriso1 from "../../assets/sorriso-do-bem.jpg";
 import imgSorriso2 from "../../assets/sorriso-do-bem-1.jpg";
+import { BackButton } from "../../components";
 
 function SorrisoDoBem() {
     useEffect(() => {
@@ -21,6 +22,7 @@ function SorrisoDoBem() {
                 </div>
             </section>
             <main className="w-[90%] mx-auto max-w-[1300px]">
+                <BackButton />
                 <section className="bg-white p-[30px] my-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
                     <h2 className="text-[1.5rem] font-bold text-[#0a3d62] border-l-[6px] border-[#b0d6f5] pl-3 mb-4">Sorriso do Bem</h2>
                     <p className="text-[1rem] text-[#333] mb-4 leading-relaxed">
