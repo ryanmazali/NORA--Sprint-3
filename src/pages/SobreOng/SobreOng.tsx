@@ -37,7 +37,7 @@ function SobreOng() {
             <h2 className="text-[1.6rem] font-bold text-[#1a4a75] border-l-[6px] border-[#b0d6f5] pl-3 mb-6">
             Missão e Valores
             </h2>{" "}
-            <div className="grid grid-cols-3 gap-5 desktop:grid-cols-3 tablet:grid-cols-1 mobile:grid-cols-1">
+            <div className="grid grid-cols-1 gap-5 tablet:grid-cols-3">
             {" "}
             {[
                 {
@@ -72,7 +72,7 @@ function SobreOng() {
             <h2 className="text-[1.6rem] font-bold text-[#1a4a75] border-l-[6px] border-[#b0d6f5] pl-3 mb-6">
             Programas em Destaque
             </h2>{" "}
-            <div className="grid grid-cols-3 gap-8 desktop:grid-cols-3 tablet:grid-cols-1 mobile:grid-cols-1">
+            <div className="grid grid-cols-1 gap-8 tablet:grid-cols-3">
             {" "}
             {[
                 {
