@@ -53,8 +53,8 @@ function Home() {
                 style={{ background: `url(${heroBg}) center/cover no-repeat` }}
             >
                 <div className="absolute inset-0 bg-[rgba(0,0,0,0.641)]">
-                    <div className="relative z-10 max-w-[800px] px-5">
-                        <h1 className="text-[2.8rem] font-bold mb-5 mobile:text-[2rem]">Bem-vindo ao NORA</h1>
+                    <div className="relative z-10 max-w-[800px] px-5 text-center mx-auto">
+                        <h1 className="text-[2.8rem] font-bold mb-5 mobile:text-[2rem] pt-4">Bem-vindo ao NORA</h1>
                         <p className="text-[1.2rem] leading-[1.6] mobile:text-[1rem]">
                             Transformando vidas com tecnologia e solidariedade. O NORA centraliza informações,
                             conecta pacientes e voluntários e fortalece o impacto da ONG.

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@600;800&display=swap');
 @import "./variables.css";
 @import "tailwindcss";
 
@@ -17,6 +18,7 @@ html {
 
 body {
     font-family: 'Poppins', sans-serif;
+    font-size: 1.05rem;
     background-color: var(--background);
     color: var(--text-dark);
     min-height: 100vh;

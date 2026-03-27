@@ -1,3 +1,10 @@
+@theme {
+    --breakpoint-mobile: 480px;
+    --breakpoint-tablet: 768px;
+    --font-sans: 'Poppins', sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+}
+
 :root {
     --brand-primary: #0a3d62;
     --brand-secondary: #1e88e5;
