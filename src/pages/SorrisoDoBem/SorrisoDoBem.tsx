@@ -16,7 +16,7 @@ function SorrisoDoBem() {
             >
                 <div className="absolute inset-0 bg-[rgba(0,0,0,0.641)]">
                     <div className="relative z-10 max-w-[800px] px-5 text-center mx-auto">
-                        <h1 className="text-[2.8rem] font-bold mobile:text-[2rem]">Sorriso do Bem</h1>
+                        <h1 className="text-[2.8rem] font-bold mobile:text-[2rem] pt-16">Sorriso do Bem</h1>
                     </div>
                 </div>
             </section>
