@@ -82,7 +82,7 @@ http://localhost:5173
 ## 🔗 Links
 
 - 🔗 **Repositório GitHub:** [https://github.com/ryanmazali/NORA--Sprint-3](https://github.com/ryanmazali/NORA--Sprint-3)
-- 📹 **Vídeo de apresentação:** *(em breve)*
+- 📹 **Vídeo de apresentação:** [https://youtu.be/zCdwB-BRVhg](https://youtu.be/zCdwB-BRVhg)
 
 ---
 
