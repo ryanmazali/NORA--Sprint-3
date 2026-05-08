@@ -3,7 +3,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import MainLayout from "./components/Layouts/MainLayout/MainLayout";
-import PlataformaLayout from "./components/Layouts/PlataformaLayout/PlataformaLayout";
+import PlataformaLayout from "./components/Plataforma/PlataformaLayoyt/PlataformaLayout";
 
 // ─── Site Institucional ───────────────────────────────────────
 const Home = lazy(() => import("./pages/Home/Home"));
