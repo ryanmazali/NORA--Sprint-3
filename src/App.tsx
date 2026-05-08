@@ -3,7 +3,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import MainLayout from "./components/Layouts/MainLayout/MainLayout";
-import PlataformaLayout from "./components/Plataforma/PlataformaLayoyt/PlataformaLayout";
+import PlataformaLayout from "./components/Plataforma/PlataformaLayout/PlataformaLayout";
 
 // ─── Site Institucional ───────────────────────────────────────
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -27,6 +27,7 @@ const PacienteDetalhe = lazy(() => import("./pages/Plataforma/Pacientes/Paciente
 const Dentistas = lazy(() => import("./pages/Plataforma/Dentistas/Dentistas"));
 const DentistaDetalhe = lazy(() => import("./pages/Plataforma/Dentistas/DentistaDetalhe"));
 const Encaminhamentos = lazy(() => import("./pages/Plataforma/Encaminhamentos/Encaminhamentos"));
+const EncaminhamentoDetalhe = lazy(() => import("./pages/Plataforma/Encaminhamentos/EncaminhamentoDetalhe"));
 const Omnichannel = lazy(() => import("./pages/Plataforma/Omnichannel/Omnichannel"));
 const OmnichannelDetalhe = lazy(() => import("./pages/Plataforma/Omnichannel/OmnichannelDetalhe"));
 const Metricas = lazy(() => import("./pages/Plataforma/Metricas/Metricas"));
@@ -73,6 +74,7 @@ function App() {
             <Route path="dentistas" element={<Dentistas />} />
             <Route path="dentistas/:id" element={<DentistaDetalhe />} />
             <Route path="encaminhamentos" element={<Encaminhamentos />} />
+            <Route path="encaminhamentos/:id" element={<EncaminhamentoDetalhe />} />
             <Route path="omnichannel" element={<Omnichannel />} />
             <Route path="omnichannel/:id" element={<OmnichannelDetalhe />} />
             <Route path="metricas" element={<Metricas />} />

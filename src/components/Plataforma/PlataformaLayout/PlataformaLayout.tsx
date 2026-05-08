@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Outlet } from "react-router";
-import Sidebar from "../../Plataforma/Sidebar/Sidebar";
-import TopBar from "../../Plataforma/Topbar/Topbar";
+import Sidebar from "../Sidebar/Sidebar";
+import TopBar from "../Topbar/Topbar";
 
 function PlataformaLayout() {
     const [sidebarAberta, setSidebarAberta] = useState(false);
