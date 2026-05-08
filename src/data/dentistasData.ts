@@ -1,5 +1,3 @@
-// src/data/dentistasData.ts
-
 export interface Dentista {
     id: number;
     nome: string;
