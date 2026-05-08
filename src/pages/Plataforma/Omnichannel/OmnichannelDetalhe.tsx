@@ -1,5 +1,3 @@
-// src/pages/Plataforma/Omnichannel/OmnichannelDetalhe.tsx
-
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import {

@@ -1,23 +1,21 @@
-// src/pages/Plataforma/Omnichannel/Omnichannel.tsx
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import {
-  MessageSquare,
-  Send,
-  Users,
-  Stethoscope,
-  Circle,
+    MessageSquare,
+    Send,
+    Users,
+    Stethoscope,
+    Circle,
 } from "lucide-react";
 import { conversas, type CamadaConversa } from "../../../data/omnichannelData";
 
 // ─── Helpers ─────────────────────────────────────────────────
 
 const labelCanal: Record<string, string> = {
-  telegram: "Telegram",
-  whatsapp: "WhatsApp",
-  instagram: "Instagram",
-  facebook: "Facebook",
+    telegram: "Telegram",
+    whatsapp: "WhatsApp",
+    instagram: "Instagram",
+    facebook: "Facebook",
 };
 
 // ─── Card de conversa ─────────────────────────────────────────
