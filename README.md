@@ -28,31 +28,58 @@ O **NORA (Network of Resources Aid)** é um sistema digital que centraliza infor
 ## 📁 Estrutura de Pastas
 ```
 src/
-├── assets/                      # Imagens, ícones e mídias
+├── assets/                          # Imagens, ícones e mídias
 ├── components/
-│   ├── BackButton/              # Botão de voltar reutilizável
-│   ├── FAQItem/                 # Item do accordion de FAQ
-│   ├── Footer/                  # Rodapé da aplicação
+│   ├── BackButton/                  # Botão de voltar reutilizável
+│   ├── FAQItem/                     # Item do accordion de FAQ
+│   ├── Footer/                      # Rodapé da aplicação
 │   ├── Layouts/
-│   │   └── MainLayout/          # Layout principal com Navbar e Footer
-│   ├── Navbar/                  # Barra de navegação responsiva
-│   ├── TeamCard/                # Card de integrante da equipe
-│   └── index.ts                 # Exportações centralizadas
+│   │   └── MainLayout/              # Layout principal com Navbar e Footer
+│   ├── Navbar/                      # Barra de navegação responsiva
+│   ├── Plataforma/
+│   │   ├── PlataformaLayout/        # Layout da plataforma interna
+│   │   ├── Sidebar/                 # Menu lateral responsivo com NavLinks
+│   │   └── TopBar/                  # Barra superior com hambúrguer (mobile)
+│   ├── TeamCard/                    # Card de integrante da equipe
+│   └── index.ts                     # Exportações centralizadas
+├── data/
+│   ├── dashboardData.ts             # KPIs, casos recentes e atividade da IA
+│   ├── dentistasData.ts             # Dentistas voluntários e especialidades
+│   ├── encaminhamentosData.ts       # Encaminhamentos e histórico de follow-ups
+│   ├── metricasData.ts              # Indicadores e dados para gráficos
+│   ├── omnichannelData.ts           # Conversas, mensagens e dados do chat
+│   └── pacientesData.ts             # Pacientes, triagens e análise da IA
 ├── pages/
-│   ├── Colaboradores/           # Página do time + detalhe individual
-│   ├── Contato/                 # Página de contato com formulário
-│   ├── FAQ/                     # Dúvidas frequentes
-│   ├── Home/                    # Página inicial
-│   ├── MelhorDentista/          # Programa Melhor Dentista do Mundo
-│   ├── Megatriagens/            # Programa Megatriagens
-│   ├── Projeto/                 # Sobre o Projeto NORA
-│   ├── SobreOng/                # Sobre a ONG Turma do Bem
-│   └── SorrisoDoBem/            # Programa Sorriso do Bem
+│   ├── Colaboradores/               # Página do time + detalhe individual
+│   ├── Contato/                     # Página de contato com formulário
+│   ├── FAQ/                         # Dúvidas frequentes
+│   ├── Home/                        # Página inicial
+│   ├── Login/                       # Tela de autenticação JWT
+│   ├── MelhorDentista/              # Programa Melhor Dentista do Mundo
+│   ├── Megatriagens/                # Programa Megatriagens
+│   ├── Plataforma/
+│   │   ├── Dashboard/               # Painel principal com KPIs e atividade da IA
+│   │   ├── Dentistas/
+│   │   │   ├── Dentistas.tsx        # Listagem com filtros e disponibilidade
+│   │   │   └── DentistaDetalhe.tsx  # Detalhe com capacidade e encaminhamentos
+│   │   ├── Encaminhamentos/
+│   │   │   ├── Encaminhamentos.tsx        # Listagem com match automático e prioridade
+│   │   │   └── EncaminhamentoDetalhe.tsx  # Detalhe com timeline de follow-ups
+│   │   ├── Metricas/                # Indicadores, gráficos e impacto da ONG
+│   │   ├── Omnichannel/
+│   │   │   ├── Omnichannel.tsx        # Lista de conversas em duas camadas
+│   │   │   └── OmnichannelDetalhe.tsx # Chat com painel lateral de análise da IA
+│   │   └── Pacientes/
+│   │       ├── Pacientes.tsx        # Listagem com busca e filtros
+│   │       └── PacienteDetalhe.tsx  # Detalhe com triagens e análise da IA
+│   ├── Projeto/                     # Sobre o Projeto NORA
+│   ├── SobreOng/                    # Sobre a ONG Turma do Bem
+│   └── SorrisoDoBem/                # Programa Sorriso do Bem
 ├── styles/
-│   ├── global.css               # Estilos globais e importação do Tailwind
-│   └── variables.css            # Variáveis CSS e breakpoints customizados
-├── App.tsx                      # Configuração das rotas
-└── main.tsx                     # Ponto de entrada da aplicação
+│   ├── global.css                   # Estilos globais e importação do Tailwind
+│   └── variables.css                # Variáveis CSS e breakpoints customizados
+├── App.tsx                          # Configuração das rotas (institucional + plataforma)
+└── main.tsx                         # Ponto de entrada da aplicação
 ```
 
 ---
