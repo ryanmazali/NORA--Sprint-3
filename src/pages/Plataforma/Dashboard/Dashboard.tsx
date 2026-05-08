@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router";
 import {
-    Users,
     Clock,
     AlertCircle,
     Stethoscope,

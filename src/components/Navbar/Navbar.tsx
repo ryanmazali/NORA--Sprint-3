@@ -21,7 +21,11 @@ export const Navbar = () => {
 
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
-          <span className="text-[#0a3d62] font-bold text-xl font-[Montserrat]">NORA</span>
+          <img 
+            src={logoNora} 
+            alt="Logo NORA" 
+            className="w-[110px] h-[110px] object-contain" 
+          />
         </Link>
 
         {/* Links — desktop */}
