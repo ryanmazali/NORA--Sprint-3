@@ -110,6 +110,7 @@ http://localhost:5173
 
 - 🔗 **Repositório GitHub:** [https://github.com/ryanmazali/NORA--Sprint-3](https://github.com/ryanmazali/NORA--Sprint-3)
 - 📹 **Vídeo de apresentação:** [https://youtu.be/zCdwB-BRVhg](https://youtu.be/zCdwB-BRVhg)
+- 🌐 **Deploy (Vercel):** [https://projeto-nora.vercel.app](https://projeto-nora.vercel.app)
 
 ---
 
