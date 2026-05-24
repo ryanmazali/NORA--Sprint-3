@@ -1,9 +1,8 @@
-// src/App.tsx
-
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import MainLayout from "./components/Layouts/MainLayout/MainLayout";
 import PlataformaLayout from "./components/Plataforma/PlataformaLayout/PlataformaLayout";
+import { PrivateRoutes } from "./components/PrivateRoutes/PrivateRoutes";
 
 // ─── Site Institucional ───────────────────────────────────────
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -62,22 +61,24 @@ function App() {
             <Route path="melhor-dentista" element={<MelhorDentista />} />
           </Route>
 
-          {/* Login — tela própria, sem Navbar/Footer */}
+          {/* Login — tela própria */}
           <Route path="login" element={<Login />} />
 
-          {/* Plataforma interna — com Sidebar e TopBar */}
-          <Route path="plataforma" element={<PlataformaLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="pacientes" element={<Pacientes />} />
-            <Route path="pacientes/:id" element={<PacienteDetalhe />} />
-            <Route path="dentistas" element={<Dentistas />} />
-            <Route path="dentistas/:id" element={<DentistaDetalhe />} />
-            <Route path="encaminhamentos" element={<Encaminhamentos />} />
-            <Route path="encaminhamentos/:id" element={<EncaminhamentoDetalhe />} />
-            <Route path="omnichannel" element={<Omnichannel />} />
-            <Route path="omnichannel/:id" element={<OmnichannelDetalhe />} />
-            <Route path="metricas" element={<Metricas />} />
+          {/* Plataforma interna — protegida por token */}
+          <Route element={<PrivateRoutes />}>
+            <Route path="plataforma" element={<PlataformaLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="pacientes" element={<Pacientes />} />
+              <Route path="pacientes/:id" element={<PacienteDetalhe />} />
+              <Route path="dentistas" element={<Dentistas />} />
+              <Route path="dentistas/:id" element={<DentistaDetalhe />} />
+              <Route path="encaminhamentos" element={<Encaminhamentos />} />
+              <Route path="encaminhamentos/:id" element={<EncaminhamentoDetalhe />} />
+              <Route path="omnichannel" element={<Omnichannel />} />
+              <Route path="omnichannel/:id" element={<OmnichannelDetalhe />} />
+              <Route path="metricas" element={<Metricas />} />
+            </Route>
           </Route>
 
         </Routes>
