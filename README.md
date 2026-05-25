@@ -29,6 +29,29 @@ O **NORA (Network of Resources Aid)** é um sistema digital que centraliza infor
 ```
 src/
 ├── assets/                          # Imagens, ícones e mídias
+├── api/
+│   ├── types/                       # Tipos TypeScript espelhando o backend
+│   ├── postAuthLogin.ts             # Autenticação JWT
+│   ├── getPessoas.ts                # Listagem de pessoas/leads
+│   ├── getPessoaById.ts             # Detalhe de pessoa
+│   ├── getDentistas.ts              # Listagem de dentistas
+│   ├── getDentistaById.ts           # Detalhe de dentista
+│   ├── deleteDentista.ts            # Remoção de dentista
+│   ├── getEncaminhamentos.ts        # Listagem de encaminhamentos
+│   ├── getEncaminhamentoById.ts     # Detalhe de encaminhamento
+│   ├── putEncaminhamento.ts         # Atualização de status
+│   ├── postEncaminhamento.ts        # Criação manual de encaminhamento
+│   ├── postAprovarTriagem.ts        # Aprovação de triagem com match automático
+│   ├── getConversas.ts              # Listagem de conversas (omnichannel)
+│   ├── getConversaById.ts           # Detalhe de conversa
+│   ├── getMensagens.ts              # Mensagens de uma conversa
+│   ├── postMensagem.ts              # Envio de mensagem
+│   ├── getMetricasResumo.ts         # KPIs da operação
+│   ├── getMetricasLeadsPorMes.ts    # Leads por mês
+│   ├── getMetricasLeadsPorCanal.ts  # Leads por canal
+│   ├── getMetricasTriagensPorStatus.ts
+│   ├── getMetricasEncaminhamentosPorPrioridade.ts
+│   └── getMetricasRegioes.ts
 ├── components/
 │   ├── BackButton/                  # Botão de voltar reutilizável
 │   ├── FAQItem/                     # Item do accordion de FAQ
@@ -39,16 +62,11 @@ src/
 │   ├── Plataforma/
 │   │   ├── PlataformaLayout/        # Layout da plataforma interna
 │   │   ├── Sidebar/                 # Menu lateral responsivo com NavLinks
-│   │   └── TopBar/                  # Barra superior com hambúrguer (mobile)
-│   ├── TeamCard/                    # Card de integrante da equipe
-│   └── index.ts                     # Exportações centralizadas
-├── data/
-│   ├── dashboardData.ts             # KPIs, casos recentes e atividade da IA
-│   ├── dentistasData.ts             # Dentistas voluntários e especialidades
-│   ├── encaminhamentosData.ts       # Encaminhamentos e histórico de follow-ups
-│   ├── metricasData.ts              # Indicadores e dados para gráficos
-│   ├── omnichannelData.ts           # Conversas, mensagens e dados do chat
-│   └── pacientesData.ts             # Pacientes, triagens e análise da IA
+│   │   └── TopBar/                  # Barra superior com hambúrguer e logout
+│   ├── PrivateRoutes/               # Proteção de rotas autenticadas
+│   └── TeamCard/                    # Card de integrante da equipe
+├── contexts/
+│   └── AuthContext.tsx              # Contexto global de sessão (useContext)
 ├── pages/
 │   ├── Colaboradores/               # Página do time + detalhe individual
 │   ├── Contato/                     # Página de contato com formulário
@@ -58,20 +76,20 @@ src/
 │   ├── MelhorDentista/              # Programa Melhor Dentista do Mundo
 │   ├── Megatriagens/                # Programa Megatriagens
 │   ├── Plataforma/
-│   │   ├── Dashboard/               # Painel principal com KPIs e atividade da IA
+│   │   ├── Dashboard/               # Painel com KPIs reais da API
 │   │   ├── Dentistas/
-│   │   │   ├── Dentistas.tsx        # Listagem com filtros e disponibilidade
-│   │   │   └── DentistaDetalhe.tsx  # Detalhe com capacidade e encaminhamentos
+│   │   │   ├── Dentistas.tsx        # Listagem integrada com API
+│   │   │   └── DentistaDetalhe.tsx  # Detalhe com modal de encaminhar paciente
 │   │   ├── Encaminhamentos/
-│   │   │   ├── Encaminhamentos.tsx        # Listagem com match automático e prioridade
-│   │   │   └── EncaminhamentoDetalhe.tsx  # Detalhe com timeline de follow-ups
+│   │   │   ├── Encaminhamentos.tsx        # Listagem com filtro por status
+│   │   │   └── EncaminhamentoDetalhe.tsx  # Detalhe com ações concluir/reencaminhar
 │   │   ├── Metricas/                # Indicadores, gráficos e impacto da ONG
 │   │   ├── Omnichannel/
-│   │   │   ├── Omnichannel.tsx        # Lista de conversas em duas camadas
-│   │   │   └── OmnichannelDetalhe.tsx # Chat com painel lateral de análise da IA
+│   │   │   ├── Omnichannel.tsx        # Lista de conversas por camada
+│   │   │   └── OmnichannelDetalhe.tsx # Chat com painel de análise da IA
 │   │   └── Pacientes/
 │   │       ├── Pacientes.tsx        # Listagem com busca e filtros
-│   │       └── PacienteDetalhe.tsx  # Detalhe com triagens e análise da IA
+│   │       └── PacienteDetalhe.tsx  # Detalhe com triagens e score de urgência da IA
 │   ├── Projeto/                     # Sobre o Projeto NORA
 │   ├── SobreOng/                    # Sobre a ONG Turma do Bem
 │   └── SorrisoDoBem/                # Programa Sorriso do Bem
@@ -97,10 +115,14 @@ cd NORA--Sprint-3
 # 3. Instale as dependências
 npm install
 
-# 4. Inicie o servidor de desenvolvimento
+# 4. Configure a variável de ambiente
+# Crie um arquivo .env.local na raiz com:
+# VITE_API_URL=https://api-nora.onrender.com
+
+# 5. Inicie o servidor de desenvolvimento
 npm run dev
 
-# 5. Acesse no navegador
+# 6. Acesse no navegador
 http://localhost:5173
 ```
 
@@ -109,7 +131,7 @@ http://localhost:5173
 ## 🔗 Links
 
 - 🔗 **Repositório GitHub:** [https://github.com/ryanmazali/NORA--Sprint-3](https://github.com/ryanmazali/NORA--Sprint-3)
-- 📹 **Vídeo de apresentação:** [https://youtu.be/zCdwB-BRVhg](https://youtu.be/zCdwB-BRVhg)
+- 📹 **Vídeo de apresentação:** [https://youtu.be/21ImDAC4qCE](https://youtu.be/21ImDAC4qCE)
 - 🌐 **Deploy (Vercel):** [https://projeto-nora.vercel.app](https://projeto-nora.vercel.app)
 
 ---
