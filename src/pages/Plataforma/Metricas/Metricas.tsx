@@ -1,314 +1,206 @@
-import { useEffect } from "react";
-import {
-    Users,
-    CheckCircle,
-    ArrowRightLeft,
-    Stethoscope,
-    TrendingUp,
-    Award,
-} from "lucide-react";
-import {
-    metricaResumo,
-    triagensPorStatus,
-    encaminhamentosPorPrioridade,
-    leadsPorCanal,
-    leadsPorMes,
-    regioesMaisAtendidas,
-} from "../../../data/metricasData";
+// src/pages/Plataforma/Metricas/Metricas.tsx
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import getMetricasResumo from "../../../api/getMetricasResumo";
+import getMetricasTriagensPorStatus from "../../../api/getMetricasTriagensPorStatus";
+import getMetricasEncaminhamentosPorPrioridade from "../../../api/getMetricasEncaminhamentosPorPrioridade";
+import getMetricasLeadsPorCanal from "../../../api/getMetricasLeadsPorCanal";
+import getMetricasLeadsPorMes from "../../../api/getMetricasLeadsPorMes";
+import getMetricasRegioes from "../../../api/getMetricasRegioes";
+import type {
+    MetricaResumo,
+    TriagensPorStatus,
+    EncaminhamentosPorPrioridade,
+    LeadsPorCanal,
+    LeadsPorMes,
+} from "../../../api/types/metrica.types";
 
-// ─── KPI Card ─────────────────────────────────────────────────
-
-interface KpiProps {
-    label: string;
-    valor: string | number;
-    sub?: string;
-    icon: React.ReactNode;
-    cor: string;
-}
-
-function KpiCard({ label, valor, sub, icon, cor }: KpiProps) {
-    return (
-        <div className={`bg-white rounded-xl shadow-sm p-5 border-l-4 ${cor} flex flex-col gap-3`}>
-            <div className="flex items-center justify-between">
-                <span className="text-[#888] text-sm font-medium">{label}</span>
-                {icon}
-            </div>
-            <div>
-                <p className="text-3xl font-bold text-[#0a3d62] font-[Montserrat]">{valor}</p>
-                {sub && <p className="text-xs text-[#888] mt-0.5">{sub}</p>}
-            </div>
-        </div>
-    );
-}
-
-// ─── Barra horizontal simples ─────────────────────────────────
-
-function BarraHorizontal({
-    label,
-    valor,
-    total,
-    cor,
-    extra,
-}: {
-    label: string;
-    valor: number;
-    total: number;
-    cor: string;
-    extra?: string;
+function BarraProgresso({ label, valor, total, cor }: {
+    label: string; valor: number; total: number; cor: string;
 }) {
-  const pct = Math.round((valor / total) * 100);
-
+    const pct = total > 0 ? Math.round((valor / total) * 100) : 0;
     return (
-        <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between text-xs">
-                <span className="text-[#555] font-medium">{label}</span>
-                <div className="flex items-center gap-2">
-                {extra && <span className="text-[#bbb]">{extra}</span>}
-                <span className="text-[#333] font-semibold">{valor}</span>
-                <span className="text-[#bbb]">({pct}%)</span>
-                </div>
-            </div>
-            <div className="w-full bg-[#f0f0f0] rounded-full h-2 overflow-hidden">
-                <div
-                className="h-full rounded-full transition-all duration-700"
-                style={{ width: `${pct}%`, backgroundColor: cor }}
-                />
-            </div>
-            </div>
-    );
-}
-
-// ─── Gráfico de barras verticais simples ──────────────────────
-
-function GraficoBarras() {
-    const maxLeads = Math.max(...leadsPorMes.map((m) => m.leads));
-
-        return (
-            <div className="flex items-end justify-between gap-2 h-[140px] px-2">
-            {leadsPorMes.map((mes) => {
-                const hLeads = Math.round((mes.leads / maxLeads) * 100);
-                const hAprov = Math.round((mes.aprovados / maxLeads) * 100);
-
-                return (
-                <div key={mes.mes} className="flex flex-col items-center gap-1 flex-1">
-                    <div className="flex items-end gap-0.5 w-full justify-center" style={{ height: "110px" }}>
-                    {/* Barra leads */}
-                    <div
-                        className="rounded-t-sm bg-[#0a3d62]/20 w-3 transition-all duration-700"
-                        style={{ height: `${hLeads}%` }}
-                        title={`Leads: ${mes.leads}`}
-                    />
-                    {/* Barra aprovados */}
-                    <div
-                        className="rounded-t-sm bg-[#1e88e5] w-3 transition-all duration-700"
-                        style={{ height: `${hAprov}%` }}
-                        title={`Aprovados: ${mes.aprovados}`}
-                    />
-                    </div>
-                    <span className="text-[10px] text-[#888]">{mes.mes}</span>
-                </div>
-                );
-            })}
+        <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between text-sm">
+            <span className="text-[#555]">{label}</span>
+            <span className="font-semibold text-[#333]">
+            {valor} <span className="text-[#aaa] font-normal text-xs">({pct}%)</span>
+            </span>
+        </div>
+        <div className="h-2 bg-[#f0f0f0] rounded-full overflow-hidden">
+            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundColor: cor }} />
+        </div>
         </div>
     );
 }
-
-// ─── Componente principal ─────────────────────────────────────
 
 function Metricas() {
+    const navigate = useNavigate();
+    const [resumo, setResumo] = useState<MetricaResumo | null>(null);
+    const [triagens, setTriagens] = useState<TriagensPorStatus | null>(null);
+    const [encPrioridade, setEncPrioridade] = useState<EncaminhamentosPorPrioridade | null>(null);
+    const [canal, setCanal] = useState<LeadsPorCanal | null>(null);
+    const [mes, setMes] = useState<LeadsPorMes | null>(null);
+    const [regioes, setRegioes] = useState<Record<string, number> | null>(null);
+    const [carregando, setCarregando] = useState(true);
+
+    async function fetchMetricas() {
+        setCarregando(true);
+
+        try {
+        const [r, t, ep, c, m, rg] = await Promise.allSettled([
+            getMetricasResumo(),
+            getMetricasTriagensPorStatus(),
+            getMetricasEncaminhamentosPorPrioridade(),
+            getMetricasLeadsPorCanal(),
+            getMetricasLeadsPorMes(),
+            getMetricasRegioes(),
+        ]);
+
+        if (r.status === "fulfilled") setResumo(r.value);
+        if (t.status === "fulfilled") setTriagens(t.value);
+        if (ep.status === "fulfilled") setEncPrioridade(ep.value);
+        if (c.status === "fulfilled") setCanal(c.value);
+        if (m.status === "fulfilled") setMes(m.value);
+        if (rg.status === "fulfilled") setRegioes(rg.value);
+
+        // Redireciona se não autenticado
+        if (r.status === "rejected" && r.reason instanceof Error) {
+            const parsedError = JSON.parse(r.reason.message);
+            if (parsedError.statusCode === 401) navigate("/login");
+        }
+        } finally {
+        setCarregando(false);
+        }
+    }
+
     useEffect(() => {
         document.title = "Métricas | NORA";
+        fetchMetricas();
     }, []);
 
-    const totalTriagens = triagensPorStatus.reduce((a, t) => a + t.quantidade, 0);
-    const totalEncam = encaminhamentosPorPrioridade.reduce((a, e) => a + e.quantidade, 0);
-    const totalCanais = leadsPorCanal.reduce((a, c) => a + c.quantidade, 0);
-    const totalRegioes = regioesMaisAtendidas.reduce((a, r) => a + r.total, 0);
+    if (carregando) {
+        return (
+        <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="w-8 h-8 border-4 border-[#0a3d62] border-t-transparent rounded-full animate-spin" />
+        </div>
+        );
+    }
 
     return (
         <div className="flex flex-col gap-6">
 
-            {/* Cabeçalho */}
-            <div>
-                <h1 className="text-[#0a3d62] font-bold text-2xl font-[Montserrat]">
-                Métricas
-                </h1>
-                <p className="text-[#888] text-sm mt-0.5">
-                Impacto e operação da ONG Turma do Bem
-                </p>
+        <div>
+            <h1 className="text-[#0a3d62] font-bold text-2xl font-[Montserrat]">Métricas</h1>
+            <p className="text-[#888] text-sm mt-0.5">Indicadores consolidados da operação</p>
+        </div>
+
+        {/* KPI resumo */}
+        {resumo && (
+            <div className="grid grid-cols-2 desktop:grid-cols-3 gap-4">
+            {[
+                { label: "Total de Leads", valor: resumo.totalLeads, cor: "#1e88e5" },
+                { label: "Aprovados", valor: resumo.totalAprovados, cor: "#10b981" },
+                { label: "Encaminhamentos", valor: resumo.totalEncaminhamentos, cor: "#f97316" },
+                { label: "Dentistas Ativos", valor: resumo.totalDentistasAtivos, cor: "#10b981" },
+                { label: "Taxa de Aprovação", valor: `${(resumo.taxaAprovacao * 100).toFixed(1)}%`, cor: "#1e88e5" },
+                { label: "Taxa de Conclusão", valor: `${(resumo.taxaConclusao * 100).toFixed(1)}%`, cor: "#10b981" },
+            ].map((kpi, i) => (
+                <div key={i} className="bg-white rounded-xl shadow-sm p-5 flex flex-col gap-1">
+                <p className="text-[#888] text-xs font-medium">{kpi.label}</p>
+                <p className="font-bold text-2xl font-[Montserrat]" style={{ color: kpi.cor }}>{kpi.valor}</p>
+                </div>
+            ))}
             </div>
+        )}
 
-            {/* KPI Cards */}
-            <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-3">
-                <KpiCard
-                label="Total de Leads"
-                valor={metricaResumo.totalLeads}
-                sub="pacientes cadastrados"
-                icon={<Users size={20} className="text-[#0a3d62]" />}
-                cor="border-l-[#0a3d62]"
-                />
-                <KpiCard
-                label="Aprovados"
-                valor={metricaResumo.totalAprovados}
-                sub={`${metricaResumo.taxaAprovacao}% de taxa de aprovação`}
-                icon={<CheckCircle size={20} className="text-emerald-500" />}
-                cor="border-l-emerald-500"
-                />
-                <KpiCard
-                label="Encaminhamentos"
-                valor={metricaResumo.totalEncaminhamentos}
-                sub={`${metricaResumo.taxaConclusao}% concluídos`}
-                icon={<ArrowRightLeft size={20} className="text-[#1e88e5]" />}
-                cor="border-l-[#1e88e5]"
-                />
-                <KpiCard
-                label="Dentistas Ativos"
-                valor={metricaResumo.totalDentistasAtivos}
-                sub="voluntários na rede"
-                icon={<Stethoscope size={20} className="text-orange-500" />}
-                cor="border-l-orange-500"
-                />
-                <KpiCard
-                label="Taxa de Aprovação"
-                valor={`${metricaResumo.taxaAprovacao}%`}
-                sub="leads aprovados no programa"
-                icon={<TrendingUp size={20} className="text-purple-500" />}
-                cor="border-l-purple-500"
-                />
-                <KpiCard
-                label="Taxa de Conclusão"
-                valor={`${metricaResumo.taxaConclusao}%`}
-                sub="encaminhamentos concluídos"
-                icon={<Award size={20} className="text-amber-500" />}
-                cor="border-l-amber-500"
-                />
-            </div>
-
-            {/* Grid de gráficos */}
-            <div className="grid grid-cols-1 gap-4 desktop:grid-cols-2">
-
-                {/* Leads por mês */}
-                <div className="bg-white rounded-xl shadow-sm p-5">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-[#0a3d62] font-semibold text-sm font-[Montserrat] uppercase tracking-wide">
-                    Leads por Mês
-                    </h2>
-                    <div className="flex items-center gap-3 text-[10px] text-[#888]">
-                    <span className="flex items-center gap-1">
-                        <span className="w-2.5 h-2.5 rounded-sm bg-[#0a3d62]/20 inline-block" />
-                        Leads
-                    </span>
-                    <span className="flex items-center gap-1">
-                        <span className="w-2.5 h-2.5 rounded-sm bg-[#1e88e5] inline-block" />
-                        Aprovados
-                    </span>
-                    </div>
-                </div>
-                <GraficoBarras />
-                </div>
-
-                {/* Triagens por status */}
-                <div className="bg-white rounded-xl shadow-sm p-5">
-                <h2 className="text-[#0a3d62] font-semibold text-sm font-[Montserrat] uppercase tracking-wide mb-4">
-                    Triagens por Status
-                </h2>
-                <div className="flex flex-col gap-3">
-                    {triagensPorStatus.map((t) => (
-                    <BarraHorizontal
-                        key={t.status}
-                        label={t.status}
-                        valor={t.quantidade}
-                        total={totalTriagens}
-                        cor={t.cor}
-                    />
-                    ))}
-                </div>
-                <p className="text-xs text-[#bbb] mt-4 text-right">Total: {totalTriagens} triagens</p>
-                </div>
-
-                {/* Encaminhamentos por prioridade */}
-                <div className="bg-white rounded-xl shadow-sm p-5">
-                <h2 className="text-[#0a3d62] font-semibold text-sm font-[Montserrat] uppercase tracking-wide mb-4">
-                    Encaminhamentos por Prioridade
-                </h2>
-                <div className="flex flex-col gap-3">
-                    {encaminhamentosPorPrioridade.map((e) => (
-                    <BarraHorizontal
-                        key={e.prioridade}
-                        label={e.prioridade}
-                        valor={e.quantidade}
-                        total={totalEncam}
-                        cor={e.cor}
-                    />
-                    ))}
-                </div>
-                <p className="text-xs text-[#bbb] mt-4 text-right">Total: {totalEncam} encaminhamentos</p>
-                </div>
-
-                {/* Canal de origem */}
-                <div className="bg-white rounded-xl shadow-sm p-5">
-                <h2 className="text-[#0a3d62] font-semibold text-sm font-[Montserrat] uppercase tracking-wide mb-4">
-                    Leads por Canal
-                </h2>
-                <div className="flex flex-col gap-3">
-                    {leadsPorCanal.map((c) => (
-                    <BarraHorizontal
-                        key={c.canal}
-                        label={c.canal}
-                        valor={c.quantidade}
-                        total={totalCanais}
-                        cor={c.cor}
-                    />
-                    ))}
-                </div>
-                <p className="text-xs text-[#bbb] mt-4 text-right">Total: {totalCanais} leads</p>
-                </div>
-            </div>
-
-            {/* Regiões mais atendidas */}
+        {/* Leads por mês */}
+        {mes && (
             <div className="bg-white rounded-xl shadow-sm p-5">
-                <h2 className="text-[#0a3d62] font-semibold text-sm font-[Montserrat] uppercase tracking-wide mb-4">
-                Regiões Mais Atendidas
-                </h2>
-                <div className="grid grid-cols-1 gap-3 tablet:grid-cols-2 desktop:grid-cols-3">
-                {regioesMaisAtendidas.map((r, i) => (
-                    <div
-                    key={r.bairro}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-[#f8fafc] border border-[#eee]"
-                    >
-                    <div className="w-8 h-8 rounded-full bg-[#0a3d62]/10 flex items-center justify-center flex-shrink-0">
-                        <span className="text-[#0a3d62] text-xs font-bold">{i + 1}</span>
+            <h2 className="text-[#0a3d62] font-semibold text-sm uppercase tracking-wide mb-4">Leads por Mês</h2>
+            <div className="flex items-end gap-1.5 overflow-x-auto pb-2">
+                {Object.entries(mes).map(([m, qtd]) => {
+                const max = Math.max(...Object.values(mes), 1);
+                const h = Math.round((qtd / max) * 100);
+                return (
+                    <div key={m} className="flex flex-col items-center gap-1 flex-1 min-w-[32px]">
+                    <span className="text-[#666] text-xs">{qtd}</span>
+                    <div className="w-full bg-[#1e88e5] rounded-t-md" style={{ height: `${Math.max(h, qtd > 0 ? 4 : 0)}px` }} />
+                    <span className="text-[#aaa] text-[10px]">{m}</span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-[#333] truncate">{r.bairro}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                        <div className="flex-1 bg-[#e0e0e0] rounded-full h-1.5 overflow-hidden">
-                            <div
-                            className="h-full rounded-full bg-[#1e88e5]"
-                            style={{ width: `${Math.round((r.aprovados / r.total) * 100)}%` }}
-                            />
-                        </div>
-                        <span className="text-[10px] text-[#888] flex-shrink-0">
-                            {r.aprovados}/{r.total}
-                        </span>
-                        </div>
-                    </div>
+                );
+                })}
+            </div>
+            </div>
+        )}
+
+        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-4">
+
+            {/* Triagens por status */}
+            {triagens && (
+            <div className="bg-white rounded-xl shadow-sm p-5 flex flex-col gap-4">
+                <h2 className="text-[#0a3d62] font-semibold text-sm uppercase tracking-wide">Triagens por Status</h2>
+                {(() => {
+                const total = Object.values(triagens).reduce((a, b) => a + b, 0);
+                return [
+                    { label: "Em Análise", valor: triagens.em_analise, cor: "#1e88e5" },
+                    { label: "Aprovada", valor: triagens.aprovada, cor: "#10b981" },
+                    { label: "Encerrada", valor: triagens.encerrada, cor: "#6b7280" },
+                    { label: "Inativa", valor: triagens.inativa, cor: "#ef4444" },
+                ].map((item) => <BarraProgresso key={item.label} {...item} total={total} />);
+                })()}
+            </div>
+            )}
+
+            {/* Encaminhamentos por prioridade */}
+            {encPrioridade && (
+            <div className="bg-white rounded-xl shadow-sm p-5 flex flex-col gap-4">
+                <h2 className="text-[#0a3d62] font-semibold text-sm uppercase tracking-wide">Encaminhamentos por Prioridade</h2>
+                {(() => {
+                const total = Object.values(encPrioridade).reduce((a, b) => a + b, 0);
+                return [
+                    { label: "Urgente", valor: encPrioridade.urgente, cor: "#ef4444" },
+                    { label: "Alta", valor: encPrioridade.alta, cor: "#f97316" },
+                    { label: "Média", valor: encPrioridade.media, cor: "#1e88e5" },
+                    { label: "Baixa", valor: encPrioridade.baixa, cor: "#6b7280" },
+                ].map((item) => <BarraProgresso key={item.label} {...item} total={total} />);
+                })()}
+            </div>
+            )}
+
+            {/* Leads por canal */}
+            {canal && (
+            <div className="bg-white rounded-xl shadow-sm p-5 flex flex-col gap-4">
+                <h2 className="text-[#0a3d62] font-semibold text-sm uppercase tracking-wide">Leads por Canal</h2>
+                {(() => {
+                const total = Object.values(canal).reduce((a, b) => a + b, 0);
+                return [
+                    { label: "Telegram", valor: canal.telegram, cor: "#0a3d62" },
+                    { label: "WhatsApp", valor: canal.whatsapp, cor: "#10b981" },
+                    { label: "Instagram", valor: canal.instagram, cor: "#f97316" },
+                    { label: "Facebook", valor: canal.facebook, cor: "#1e88e5" },
+                    { label: "Outro", valor: canal.outro, cor: "#6b7280" },
+                ].map((item) => <BarraProgresso key={item.label} {...item} total={total} />);
+                })()}
+            </div>
+            )}
+
+            {/* Regiões */}
+            {regioes && (
+            <div className="bg-white rounded-xl shadow-sm p-5 flex flex-col gap-3">
+                <h2 className="text-[#0a3d62] font-semibold text-sm uppercase tracking-wide">Regiões Mais Atendidas</h2>
+                {Object.entries(regioes)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 8)
+                .map(([bairro, total]) => (
+                    <div key={bairro} className="flex items-center justify-between text-sm">
+                    <span className="text-[#555]">{bairro}</span>
+                    <span className="font-semibold text-[#333]">{total}</span>
                     </div>
                 ))}
-                </div>
-                <p className="text-xs text-[#bbb] mt-4 text-right">
-                Total de pacientes: {totalRegioes}
-                </p>
             </div>
-
-            {/* Nota sobre dados */}
-            <div className="bg-[#f0f4f8] rounded-xl p-4">
-                <p className="text-xs text-[#888] text-center leading-relaxed">
-                Os dados exibidos são alimentados pelo banco Oracle via API Quarkus.
-                Quando o backend estiver conectado, as métricas serão atualizadas em tempo real.
-                </p>
-            </div>
-
+            )}
+        </div>
         </div>
     );
 }

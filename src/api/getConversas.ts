@@ -1,19 +1,19 @@
 // src/api/getConversas.ts
 import type { Conversa } from "./types/conversa.types";
 
-export type FiltroContexto = "cadastro" | "acomp_paciente" | "acomp_dentista";
-export type FiltroStatus = "ativa" | "encerrada";
+export type FiltroCamada = "pretriagem" | "followup";
+export type FiltroStatus = "aberta" | "encerrada";
 
 async function getConversas(
-  contexto?: FiltroContexto,
-  stts?: FiltroStatus
+  camada?: FiltroCamada,
+  status?: FiltroStatus
 ): Promise<Conversa[]> {
   const url = import.meta.env.VITE_API_URL;
   const token = JSON.parse(sessionStorage.getItem("nora_token") as string);
 
   const params = new URLSearchParams();
-  if (contexto) params.append("contexto", contexto);
-  if (stts) params.append("stts", stts);
+  if (camada) params.append("camada", camada);
+  if (status) params.append("status", status);
   const query = params.toString() ? `?${params.toString()}` : "";
 
   const response = await fetch(`${url}/conversas${query}`, {

@@ -1,3 +1,5 @@
+// src/api/types/conversa.types.ts
+
 export type Mensagem = {
   idMensagem: number;
   idConversa: number;
@@ -8,19 +10,28 @@ export type Mensagem = {
   dataEnvio?: string;
 };
 
+export type DadosPessoa = {
+  id: number;
+  nome: string;
+  telefone?: string;
+};
+
+export type DadosDentista = {
+  id: number;
+  nome: string;
+  cro?: string;
+  telefone?: string;
+};
+
 export type Conversa = {
-  idConversa: number;
-  canalConv: "telegram" | "whatsapp" | "instagram" | "facebook";
-  contexto: "cadastro" | "acomp_paciente" | "acomp_dentista";
-  tgThreadId?: string | null;
-  idPessoa?: number | null;
-  idPaciente?: number | null;
-  idDentista?: number | null;
-  sttsConv: "ativa" | "encerrada";
+  id: number;
+  camada: "pretriagem" | "followup";
+  canal: "telegram" | "whatsapp" | "instagram" | "facebook";
+  status: "aberta" | "encerrada";
   naoLidas: number;
-  ultimaMensagem?: string;
-  ultimoHorario?: string;
-  dadosPaciente?: { id: number; nome: string; telefone?: string } | null;
-  dadosDentista?: { id: number; nome: string; telefone?: string } | null;
+  ultimaMensagem?: string | null;
+  ultimoHorario?: string | null;
+  dadosPaciente?: DadosPessoa | null;
+  dadosDentista?: DadosDentista | null;
   mensagens?: Mensagem[];
 };
