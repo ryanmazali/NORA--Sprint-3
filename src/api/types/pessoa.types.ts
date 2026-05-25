@@ -1,8 +1,12 @@
+// src/api/types/pessoa.types.ts
+
 export type TriagemResumo = {
   id: number;
   elegibilidade: "elegivel" | "inelegivel" | "pendente";
   prioridade: "baixa" | "media" | "alta" | "urgente";
-  status: "em_analise" | "aprovada" | "encerrada" | "inativa";
+  // backend retorna "statusTriagem" mas pode vir como "status" também
+  status?: "em_analise" | "aprovada" | "encerrada" | "inativa";
+  statusTriagem?: "em_analise" | "aprovada" | "encerrada" | "inativa";
   decisao?: "aprovado" | "encerrado" | "reanalise" | null;
   problemaBucal?: string;
   rendaFamiliar?: string;

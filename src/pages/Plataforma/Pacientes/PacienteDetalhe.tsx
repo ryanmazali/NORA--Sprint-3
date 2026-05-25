@@ -168,18 +168,38 @@ function PacienteDetalhe() {
             </div>
             </div>
 
-            {pessoa.nivelUrgenciaIA != null && (
-            <div className={`px-4 py-3 rounded-xl border flex flex-col items-center gap-1 ${corUrgencia(pessoa.nivelUrgenciaIA)}`}>
+            {/* Card de urgência IA — usa nivelUrgenciaIA da pessoa ou da triagem mais relevante */}
+            {(() => {
+            // 1. Tenta o campo direto da pessoa
+            const nivelPessoa = pessoa.nivelUrgenciaIA;
+            const confPessoa = pessoa.confIA;
+
+            // 2. Fallback: triagem com maior nivelUrgenciaIA
+            const melhorTriagem = pessoa.triagens
+                .filter((t) => t.nivelUrgenciaIA != null)
+                .sort((a, b) => (b.nivelUrgenciaIA ?? 0) - (a.nivelUrgenciaIA ?? 0))[0];
+
+            const nivel = nivelPessoa ?? melhorTriagem?.nivelUrgenciaIA ?? null;
+            const conf = confPessoa ?? melhorTriagem?.confiancaIA ?? null;
+
+            if (nivel == null) return null;
+
+            return (
+                <div className={`px-4 py-3 rounded-xl border flex flex-col items-center gap-1 ${corUrgencia(nivel)}`}>
                 <Activity size={20} />
-                <span className="font-bold text-lg font-[Montserrat]">{pessoa.nivelUrgenciaIA.toFixed(1)}</span>
-                <span className="text-xs font-medium">{labelUrgencia(pessoa.nivelUrgenciaIA)}</span>
-                {pessoa.confIA != null && (
-                <span className="text-xs opacity-70">
-                    Conf. {(pessoa.confIA * (pessoa.confIA <= 1 ? 100 : 1)).toFixed(0)}%
-                </span>
+                <span className="font-bold text-lg font-[Montserrat]">{nivel.toFixed(1)}</span>
+                <span className="text-xs font-medium">{labelUrgencia(nivel)}</span>
+                {conf != null && (
+                    <span className="text-xs opacity-70">
+                    Conf. {(conf * (conf <= 1 ? 100 : 1)).toFixed(0)}%
+                    </span>
                 )}
-            </div>
-            )}
+                {nivelPessoa == null && melhorTriagem && (
+                    <span className="text-[10px] opacity-50 mt-0.5">via triagem #{melhorTriagem.id}</span>
+                )}
+                </div>
+            );
+            })()}
         </div>
 
         {/* Grid de detalhes */}
@@ -234,44 +254,64 @@ function PacienteDetalhe() {
                 <p className="text-[#bbb] text-sm">Nenhuma triagem registrada</p>
             ) : (
                 <div className="flex flex-col gap-2">
-                {pessoa.triagens.map((t) => (
-                    <div key={t.id} className="flex items-center justify-between gap-2 py-2 border-b border-[#f5f5f5] last:border-none">
-                    <div className="flex items-center gap-2">
-                        {t.status === "aprovada" ? (
-                        <CheckCircle size={14} className="text-emerald-500" />
-                        ) : t.status === "em_analise" ? (
-                        <Clock size={14} className="text-orange-500" />
-                        ) : (
-                        <XCircle size={14} className="text-gray-400" />
-                        )}
-                        <span className="text-[#555] text-sm">#{t.id}</span>
-                        {t.dataTriagem && (
-                        <span className="text-[#999] text-xs">{t.dataTriagem}</span>
-                        )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badgePrioridade[t.prioridade] ?? "bg-gray-100 text-gray-600"}`}>
-                        {t.prioridade}
-                        </span>
-                        {t.status === "em_analise" && (
-                        <button
-                            onClick={() => handleAprovar(t.id)}
-                            disabled={aprovando === t.id}
-                            className="text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1 rounded-lg transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-1"
-                        >
-                            {aprovando === t.id ? (
-                            <>
-                                <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Aprovando...
-                            </>
+                {pessoa.triagens.map((t) => {
+                    // backend retorna statusTriagem ou status
+                    const statusAtual = t.statusTriagem ?? t.status;
+                    return (
+                    <div key={t.id} className="flex flex-col gap-1.5 py-2 border-b border-[#f5f5f5] last:border-none">
+                        <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                            {statusAtual === "aprovada" ? (
+                            <CheckCircle size={14} className="text-emerald-500" />
+                            ) : statusAtual === "em_analise" ? (
+                            <Clock size={14} className="text-orange-500" />
                             ) : (
-                            "Aprovar"
+                            <XCircle size={14} className="text-gray-400" />
                             )}
-                        </button>
+                            <span className="text-[#555] text-sm font-medium">#{t.id}</span>
+                            {t.dataTriagem && (
+                            <span className="text-[#999] text-xs">{t.dataTriagem}</span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badgePrioridade[t.prioridade] ?? "bg-gray-100 text-gray-600"}`}>
+                            {t.prioridade}
+                            </span>
+                            {statusAtual === "em_analise" && (
+                            <button
+                                onClick={() => handleAprovar(t.id)}
+                                disabled={aprovando === t.id}
+                                className="text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1 rounded-lg transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-1"
+                            >
+                                {aprovando === t.id ? (
+                                <>
+                                    <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Aprovando...
+                                </>
+                                ) : (
+                                "Aprovar"
+                                )}
+                            </button>
+                            )}
+                        </div>
+                        </div>
+
+                        {/* Problema bucal da triagem */}
+                        {t.problemaBucal && (
+                        <p className="text-[#888] text-xs italic pl-5">"{t.problemaBucal}"</p>
+                        )}
+
+                        {/* Análise de IA da triagem */}
+                        {t.nivelUrgenciaIA != null && (
+                        <div className={`ml-5 flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium ${corUrgencia(t.nivelUrgenciaIA)}`}>
+                            <Activity size={12} />
+                            <span>IA: {labelUrgencia(t.nivelUrgenciaIA)}</span>
+                            <span className="font-bold">{t.nivelUrgenciaIA.toFixed(1)}</span>
+                        </div>
                         )}
                     </div>
-                    </div>
-                ))}
+                    );
+                })}
                 </div>
             )}
 

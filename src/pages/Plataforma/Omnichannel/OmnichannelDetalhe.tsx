@@ -92,8 +92,14 @@ function PainelPaciente({ conversa, onAprovar, aprovando, mensagemAcao }: Painel
 
     if (!p) return null;
 
-    const nivelIA = pessoaCompleta?.nivelUrgenciaIA;
-    const confIA = pessoaCompleta?.confIA;
+    const nivelIA = pessoaCompleta?.nivelUrgenciaIA
+        ?? pessoaCompleta?.triagens
+            ?.filter((t) => t.nivelUrgenciaIA != null)
+            ?.sort((a, b) => (b.nivelUrgenciaIA ?? 0) - (a.nivelUrgenciaIA ?? 0))[0]
+            ?.nivelUrgenciaIA
+        ?? null;
+
+    const confIA = pessoaCompleta?.confIA ?? null;
 
     return (
         <div className="flex flex-col gap-4">
@@ -214,9 +220,9 @@ function PainelPaciente({ conversa, onAprovar, aprovando, mensagemAcao }: Painel
         </div>
         </div>
     );
-}
+    }
 
-function PainelDentista({ conversa }: { conversa: Conversa }) {
+    function PainelDentista({ conversa }: { conversa: Conversa }) {
     const d = conversa.dadosDentista;
     if (!d) return null;
 
