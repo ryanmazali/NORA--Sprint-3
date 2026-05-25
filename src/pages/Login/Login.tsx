@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Layers } from "lucide-react";
 import postAuthLogin, { type LoginPayload } from "../../api/postAuthLogin";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LoginForm {
     email: string;
@@ -15,6 +16,7 @@ function Login() {
     const [carregando, setCarregando] = useState(false);
     const [erroServidor, setErroServidor] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { recarregarSessao } = useAuth();
 
     const {
         register,
@@ -28,6 +30,7 @@ function Login() {
 
         try {
         await postAuthLogin(payload);
+        recarregarSessao();
         navigate("/plataforma/dashboard", { replace: true });
         } catch (error) {
         if (error instanceof Error) {

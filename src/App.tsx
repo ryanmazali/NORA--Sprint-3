@@ -1,8 +1,10 @@
+// src/App.tsx
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import MainLayout from "./components/Layouts/MainLayout/MainLayout";
 import PlataformaLayout from "./components/Plataforma/PlataformaLayout/PlataformaLayout";
 import { PrivateRoutes } from "./components/PrivateRoutes/PrivateRoutes";
+import { AuthProvider } from "./contexts/AuthContext";
 
 // ─── Site Institucional ───────────────────────────────────────
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -43,9 +45,10 @@ const Loading = () => (
 
 function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<Loading />}>
-        <Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Suspense fallback={<Loading />}>
+          <Routes>
 
           {/* Site institucional — com Navbar e Footer */}
           <Route element={<MainLayout />}>
@@ -82,8 +85,9 @@ function App() {
           </Route>
 
         </Routes>
-      </Suspense>
-    </BrowserRouter>
+        </Suspense>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
