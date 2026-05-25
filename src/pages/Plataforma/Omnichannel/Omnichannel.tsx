@@ -122,7 +122,7 @@ function Omnichannel() {
             {[
             { label: "Pré-triagem", valor: pretriagem.length, icon: <Users size={16} />, cor: "text-[#0a3d62]" },
             { label: "Pacientes", valor: conversas.filter(c => c.camada === "pretriagem" && c.dadosPaciente).length, icon: <MessageSquare size={16} />, cor: "text-[#1e88e5]" },
-            { label: "Dentistas", valor: conversas.filter(c => c.dadosDentista).length, icon: <Stethoscope size={16} />, cor: "text-emerald-500" },
+            { label: "Dentistas", valor: followup.filter(c => c.dadosDentista).length, icon: <Stethoscope size={16} />, cor: "text-emerald-500" },
             ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl shadow-sm p-4 flex flex-col gap-1 items-center text-center">
                 <span className={s.cor}>{s.icon}</span>
